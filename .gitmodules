@@ -1,0 +1,3 @@
+[submodule "3rdParty/sol2"]
+	path = 3rdParty/sol2
+	url = https://github.com/ThePhD/sol2
