@@ -72,15 +72,24 @@ void Game::ProcessInput() {
     }
 }
 
+void Game::Setup() {
+    // @todo initialize game objects
+}
+
 void Game::Update() {
 
+    // @todo update game objects
 }
 
 void Game::Render() {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    Setup();
+    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-    // @todo Render game objects
+    // Draw a rectangel
+    SDL_Rect player = { 10, 10, 20, 20 };
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect (renderer, &player);
 
     SDL_RenderPresent(renderer);
 }
