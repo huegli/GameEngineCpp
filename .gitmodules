@@ -1,3 +1,6 @@
 [submodule "3rdParty/sol2"]
 	path = 3rdParty/sol2
 	url = https://github.com/ThePhD/sol2
+[submodule "3rdParty/termcolor"]
+	path = 3rdParty/termcolor
+	url = https://github.com/ikalnytskyi/termcolor.git
