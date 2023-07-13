@@ -1,7 +1,8 @@
 gameengine
 GameEngineCpp
-.vs
 Debug
 x64
 GameEngineCpp.sln
 GameEngineCpp.vcxproj*
+.vs
+.cache
