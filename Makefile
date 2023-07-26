@@ -4,11 +4,11 @@
 CC = clang++
 LANG_STD = -std=c++17
 COMPILER_FLAGS = -Wall -Wfatal-errors
-INCLUDE_PATH = -I"./libs" -I"./libs/lua"
+INCLUDE_PATH = -I"./libs" -I"./libs/lua" -I"/opt/homebrew/include/SDL2"
 SRC_FILES = src/*.cpp \
 			src/Game/*.cpp \
 			src/Logger/*.cpp 
-LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -llua 
+LINKER_FLAGS = -L"/opt/homebrew/lib" -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -llua 
 OBJ_NAME = gameengine 
 
 build:
