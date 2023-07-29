@@ -8,21 +8,16 @@ int Entity::GetId() const {
 }
 
 void System::AddEntityToSystem(Entity entity) {
-  // check if entity already exists and return if so
-  // auto it = std::find(entities.begin(), entities.end(), entity);
-
-  // if (it == entities.end()) {
-
-  // }
-
   // add entity to the end of the vector
   entities.push_back(entity);
 }
 
 void System::RemoveEntityFromSystem(Entity entity) {
+  // implementation of the erase-remove idiom
+  // swap the found entities to the end and then erase them from the end of the vector
   entities.erase(std::remove_if(entities.begin(), entities.end(), [&entity](Entity other) {
     return entity.GetId() == other.GetId();
-  }));
+  }), entities.end());
 }
 
 std::vector<Entity> System::GetSystemEntities() const {
