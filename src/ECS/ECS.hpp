@@ -35,7 +35,15 @@ private:
 
 public:
   Entity(int id) : id(id){};
+  Entity(const Entity& entity) = default;
   int GetId() const;
+
+  Entity& operator = (const Entity& other) = default;
+  bool operator == (const Entity& other) const { return id == other.id; }
+  bool operator != (const Entity& other) const { return id != other.id; }
+  bool operator > (const Entity& other) const { return id > other.id; }
+  bool operator < (const Entity& other) const { return id < other.id; }
+  
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +71,10 @@ public:
 };
 
 class Registry {
-  // TODO
+private:
+  // Keep track of how many entities were added to the scene
+  int numEntities = 0;
+  
 };
 
 // Implementation of the function template
