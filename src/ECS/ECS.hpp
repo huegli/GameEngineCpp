@@ -1,10 +1,10 @@
 #pragma once
 
 #include <bitset>
-#include <vector>
-#include <unordered_map>
 #include <typeindex>
-
+#include <unordered_map>
+#include <vector>
+#include <set>
 
 const unsigned int MAX_COMPONENTS = 32;
 
@@ -129,10 +129,22 @@ private:
   std::vector<Signature> entityComponentSignatures;
 
   // Map of active systems (index = system typeid)
-  std::unordered_map<std::type_index, System*> systems;
+  std::unordered_map<std::type_index, System *> systems;
+
+  // Set of entities that are flagged to be added or removed in the next registry Update()
+  std::set<Entity> entitiesToBeAdded;
+  std::set<Entity> entitiesToBeKilled;
 
 public:
   Registry() = default;
+
+  void Update();
+  
+  Entity CreateEntity();
+
+  // TODO: AddComponentToSystem
+ 
+  void AddEntityToSystem(Entity entity);
 
   // TODO:
   // CreateEntity()
@@ -147,7 +159,7 @@ public:
   // RemoveSystem()
   // HasSystem()
   // GetSystem()
-  // 
+  //
 };
 
 // Implementation of the function template
