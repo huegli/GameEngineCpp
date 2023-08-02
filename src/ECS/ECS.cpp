@@ -51,3 +51,5 @@ void Registry::Update() {
   // TODO: Add the entities that are waiting to be created to the active Systems
   // TODO: Remove the entities that are waiting to be killed from the active Systems
 }
+
+
