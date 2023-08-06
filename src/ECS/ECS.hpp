@@ -150,11 +150,9 @@ public:
   template <typename TComponent, typename... TArgs>
   void AddComponent(Entity entity, TArgs &&...args);
 
-  template <typename T> void RemoveComponent(Entity entity);
-
-  template <typename T> bool HasComponenent(Entity entity) const;
-
-  template <typename T> T &GetComponenent(Entity entity) const;
+  template <typename TComponent> void RemoveComponent(Entity entity);
+  template <typename TComponent> bool HasComponenent(Entity entity) const;
+  template <typename TComponent> TComponent &GetComponenent(Entity entity) const;
 
   // void AddEntityToSystem(Entity entity);
 
@@ -211,16 +209,15 @@ void Registry::AddComponent(Entity entity, TArgs &&...args) {
   entityComponentSignatures[entityId].set(componentId);
 }
 
-template <typename T> void Registry::RemoveComponent(Entity entity) {
-  const auto componentId = Component<T>::GetId();
+template <typename TComponent> void Registry::RemoveComponent(Entity entity) {
+  const auto componentId = Component<TComponent>::GetId();
   const auto entityId = entity.GetId();
-
   entityComponentSignatures[entityId].set(componentId, false);
 }
 
-template <typename T> bool Registry::HasComponenent(Entity entity) const {
-  const auto componentId = Component<T>::GetId();
+template <typename TComponent> bool Registry::HasComponenent(Entity entity) const {
+  const auto componentId = Component<TComponent>::GetId();
   const auto entityId = entity.GetId();
-
   return entityComponentSignatures[entityId].test(componentId);
 }
+
