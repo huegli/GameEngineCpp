@@ -49,6 +49,24 @@ Entity Registry::CreateEntity() {
 
 }
 
+void Registry::AddEntityToSystem(Entity entity) {
+  const auto entityId = entity.GetId();
+
+  // TODO: match entityComponentSignature <---> systemCompomentSignature
+  const auto& entityComponentSignature = entityComponentSignatures[entityId];
+  
+  // Loop all the systems
+  for (auto& system: systems) {
+    const auto& systemCompomentSignature = system.second->GetComponentSignature();
+
+    bool isInterested = (entityComponentSignature & systemCompomentSignature) == systemCompomentSignature;
+
+    if (isInterested) {
+      system.second->AddEntityToSystem(entity);
+    }
+  }
+}
+
 void Registry::Update() {
   // TODO: Add the entities that are waiting to be created to the active Systems
   // TODO: Remove the entities that are waiting to be killed from the active Systems

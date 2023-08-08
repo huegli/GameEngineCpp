@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bitset>
+#include <memory>
 #include <set>
 #include <typeindex>
 #include <unordered_map>
@@ -152,9 +153,19 @@ public:
 
   template <typename TComponent> void RemoveComponent(Entity entity);
   template <typename TComponent> bool HasComponenent(Entity entity) const;
-  template <typename TComponent> TComponent &GetComponenent(Entity entity) const;
+  template <typename TComponent>
+  TComponent &GetComponenent(Entity entity) const;
 
-  // void AddEntityToSystem(Entity entity);
+  // System management
+  template <typename TSystem, typename... TArgs>
+  void AddSystem(TArgs &&...args);
+  template <typename TSystem> void RemoveSystem();
+  template <typename TSystem> bool HasSystem() const;
+  template <typename TSystem> TSystem &GetSystem() const;
+
+  // Checks the component signature of an entity and add the entity to the
+  // systems that are interested in it
+  void AddEntityToSystem(Entity entity);
 
   // TODO:
   // CreateEntity()
@@ -171,6 +182,26 @@ public:
 template <typename TComponent> void System::RequireComponent() {
   const auto componentId = Component<TComponent>::GetId();
   componentSignature.set(componentId);
+}
+
+template <typename TSystem, typename... TArgs>
+void Registry::AddSystem(TArgs &&...args) {
+  TSystem *newSystem(new TSystem(std::forward<TArgs>(args)...));
+  systems.insert(std::make_pair(std::type_index(typeid(TSystem)), newSystem));
+}
+
+template <typename TSystem> void Registry::RemoveSystem() {
+  auto system = systems.find(std::type_index(typeid(TSystem)));
+  systems.erase(system);
+}
+
+template <typename TSystem> bool Registry::HasSystem() const {
+  return systems.find(std::type_index(typeid(TSystem))) != systems.end();
+}
+
+template <typename TSystem> TSystem &Registry::GetSystem() const {
+  auto system = systems.find(std::type_index(typeid(TSystem)));
+  return *(std::static_pointer_cast<TSystem>(system->second));
 }
 
 template <typename TComponent, typename... TArgs>
@@ -215,9 +246,9 @@ template <typename TComponent> void Registry::RemoveComponent(Entity entity) {
   entityComponentSignatures[entityId].set(componentId, false);
 }
 
-template <typename TComponent> bool Registry::HasComponenent(Entity entity) const {
+template <typename TComponent>
+bool Registry::HasComponenent(Entity entity) const {
   const auto componentId = Component<TComponent>::GetId();
   const auto entityId = entity.GetId();
   return entityComponentSignatures[entityId].test(componentId);
 }
-
