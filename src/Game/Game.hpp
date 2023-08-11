@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../ECS/ECS.hpp"
+
 #include <SDL.h>
 
 const int FPS = 60;
@@ -11,6 +13,8 @@ private:
   int millisecsPreviousFrame = 0;
   SDL_Window *window;
   SDL_Renderer *renderer;
+
+  Registry *registry;
 
 public:
   Game();
