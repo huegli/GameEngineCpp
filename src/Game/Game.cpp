@@ -1,8 +1,9 @@
 #include "Game.hpp"
+#include "../Components/RBodyComponent.hpp"
+#include "../Components/TranformComponent.hpp"
 #include "../ECS/ECS.hpp"
 #include "../Logger/Logger.hpp"
-#include "../Components/TranformComponent.hpp"
-#include "../Components/RBodyComponent.hpp"
+#include "../Systems/MovementSystem.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm/glm.hpp>
@@ -61,18 +62,20 @@ void Game::ProcessInput() {
 }
 
 void Game::Setup() {
+  // Add the systems that need to be processed in our game
+  registry->AddSystem<MovementSystem>();
+
   // TODO:
   // Create some entity
   Entity tank = registry->CreateEntity();
 
   // Add some components to that Entity
-  // registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-  // registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
-  tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+  // registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0),
+  // glm::vec2(1.0, 1.0), 0.0); registry->AddComponent<RigidBodyComponent>(tank,
+  // glm::vec2(50.0, 0.0));
+  tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0),
+                                        glm::vec2(1.0, 1.0), 0.0);
   tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
-
-  // Remove a component from the registry
-  tank.RemoveComponent<RigidBodyComponent>();
 }
 
 void Game::Update() {
@@ -89,10 +92,12 @@ void Game::Update() {
   // Store the current frame time
   millisecsPreviousFrame = SDL_GetTicks();
 
-  // TODO:
-  // MovementSystem.Update()
-  // CollisionSystem.Update()
-  // DamageSystem.Update()
+  // Ask all the systems to update
+  registry->GetSystem<MovementSystem>().Update(deltaTime);
+
+  // Update the registry to process the entities that are waiting to be
+  // created/deleted
+  registry->Update();
 }
 
 void Game::Render() {
