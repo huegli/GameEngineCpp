@@ -1,9 +1,11 @@
 #include "Game.hpp"
 #include "../Components/RBodyComponent.hpp"
+#include "../Components/SpriteComponent.hpp"
 #include "../Components/TranformComponent.hpp"
 #include "../ECS/ECS.hpp"
 #include "../Logger/Logger.hpp"
 #include "../Systems/MovementSystem.hpp"
+#include "../Systems/RenderSystem.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm/glm.hpp>
@@ -64,18 +66,21 @@ void Game::ProcessInput() {
 void Game::Setup() {
   // Add the systems that need to be processed in our game
   registry->AddSystem<MovementSystem>();
+  registry->AddSystem<RenderSystem>();
 
   // TODO:
   // Create some entity
   Entity tank = registry->CreateEntity();
-
-  // Add some components to that Entity
-  // registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0),
-  // glm::vec2(1.0, 1.0), 0.0); registry->AddComponent<RigidBodyComponent>(tank,
-  // glm::vec2(50.0, 0.0));
   tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0),
                                         glm::vec2(1.0, 1.0), 0.0);
-  tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
+  tank.AddComponent<RigidBodyComponent>(glm::vec2(40.0, 0.0));
+  tank.AddComponent<SpriteComponent>(10, 10);
+
+  Entity truck = registry->CreateEntity();
+  truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0),
+                                         glm::vec2(1.0, 1.0), 0.0);
+  truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
+  truck.AddComponent<SpriteComponent>(10, 50);
 }
 
 void Game::Update() {
@@ -104,7 +109,9 @@ void Game::Render() {
   SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
   SDL_RenderClear(renderer);
 
-  // TODO: Render game objects
+  // Invoke all the systems that need to render
+  registry->GetSystem<RenderSystem>().Update(renderer);
+
   SDL_RenderPresent(renderer);
 }
 
