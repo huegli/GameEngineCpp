@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Components/RBodyComponent.hpp"
+#include "../Components/RigidBodyComponent.hpp"
 #include "../Components/TranformComponent.hpp"
 #include "../ECS/ECS.hpp"
 
@@ -21,10 +21,10 @@ public:
       transform.position.x += rigidbody.velocity.x * deltaTime;
       transform.position.y += rigidbody.velocity.y * deltaTime;
 
-      Logger::Log("Entity id = " + std::to_string(entity.GetId()) +
-                  " positition is now (" +
-                  std::to_string(transform.position.x) + ", " +
-                  std::to_string(transform.position.y) + ")");
+      // Logger::Log("Entity id = " + std::to_string(entity.GetId()) +
+      //             " positition is now (" +
+      //             std::to_string(transform.position.x) + ", " +
+      //             std::to_string(transform.position.y) + ")");
     }
   }
 };
