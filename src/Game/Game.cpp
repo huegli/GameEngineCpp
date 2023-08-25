@@ -79,18 +79,11 @@ void Game::LoadLevel(int level) {
   assetStore->AddTexture(renderer, "truck-image",
                          "./assets/images/truck-ford-right.png");
 
-  // TODO: Load the tilemap
-  // We need to load the tilemap texture from ./assets/tilemaps/jungle.png
-  // We need to load the file ./assets/tilemaps/jungle.map
-  // Tip: you can use the idea of the source rectangle
-  // Tip: Consider creating one entity per tile
+  // Load the tilemap
   assetStore->AddTexture(renderer, "tilemap",
                          "./assets/tilemaps/jungle.png");
 
-  // create a vector of vectors of 25x20 int's
-  // std::vector<std::vector<int>> tilemap(20, std::vector<int>(25, 0));
-
-  // Read in the contents of jungle.map into the vector
+  // Read in the contents of jungle.map 
   std::ifstream mapfile("./assets/tilemaps/jungle.map");
   std::string line;
   auto y = 0;

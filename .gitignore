@@ -6,3 +6,4 @@ GameEngineCpp.sln
 GameEngineCpp.vcxproj*
 .vs
 .cache
+*.dSYM
