@@ -23,6 +23,7 @@ public:
   void Initialize();
   void Setup();
   void Run();
+  void LoadLevel(int level);
   void ProcessInput();
   void Update();
   void Render();

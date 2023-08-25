@@ -7,7 +7,7 @@ SDL2_LIB_PATH := $(shell sdl2-config --libs )
 
 CC = clang++
 LANG_STD = -std=c++17
-COMPILER_FLAGS = -Wall -Wfatal-errors
+COMPILER_FLAGS = -Wall -Wfatal-errors -g
 INCLUDE_PATH = -I"./libs" -I"./libs/lua"
 SRC_FILES = src/*.cpp \
 			src/Game/*.cpp \
