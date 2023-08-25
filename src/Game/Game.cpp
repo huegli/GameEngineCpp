@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <fstream>
+#include <map>
 #include <sstream>
 
 Game::Game() {
@@ -31,7 +32,7 @@ void Game::Initialize() {
   SDL_DisplayMode displayMode;
   SDL_GetCurrentDisplayMode(0, &displayMode);
   windowWidth = 800;  // displayMode.w;
-  windowHeight = 600; // displayMode.h;
+  windowHeight = 640; // displayMode.h;
   window =
       SDL_CreateWindow(NULL, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        windowWidth, windowHeight, SDL_WINDOW_BORDERLESS);
@@ -46,7 +47,7 @@ void Game::Initialize() {
     return;
   }
 
-  // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+  SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
   isRunning = true;
 }
@@ -83,20 +84,25 @@ void Game::LoadLevel(int level) {
   assetStore->AddTexture(renderer, "tilemap",
                          "./assets/tilemaps/jungle.png");
 
-  // Read in the contents of jungle.map 
+  // define some variables for tilemap processing
+  auto tileSize = 32;
+  auto tileScale = 2.0;
+  auto spritesInPNGRow = 10;
+
+  // Read in the contents of jungle.map
   std::ifstream mapfile("./assets/tilemaps/jungle.map");
   std::string line;
   auto y = 0;
 
   // read lines from map file until EOF
   while (std::getline(mapfile, line)) {
-  
+
     // create string stream from read in line
     std::stringstream s(line);
 
     std::string word;
     auto x = 0;
-  
+
     // break line into words that contain the tilenumber
     while (std::getline(s, word, ',')) {
       // get tile number as integer
@@ -106,31 +112,26 @@ void Game::LoadLevel(int level) {
       Entity tile = registry->CreateEntity();
 
       // derive the position in the map
-      auto xpos = x*32.0;
-      auto ypos = y*32.0;
+      auto xpos = x*tileSize*tileScale;
+      auto ypos = y*tileSize*tileScale;
 
       // derive the offset in the tilemap
-      auto xoffset = (tilenum % 10) * 32;
-      auto yoffset = (tilenum / 10) * 32;
+      auto xoffset = (tilenum % spritesInPNGRow) * tileSize;
+      auto yoffset = (tilenum / spritesInPNGRow) * tileSize;
 
       // place the tile and associate the proper tile sprite
       tile.AddComponent<TransformComponent>(glm::vec2(xpos, ypos),
-                                            glm::vec2(1.0, 1.0), 0.0);
-      tile.AddComponent<SpriteComponent>("tilemap", 32, 32, xoffset, yoffset);
+                                            glm::vec2(tileScale, tileScale), 0.0);
+      tile.AddComponent<SpriteComponent>("tilemap", tileSize, tileSize, xoffset, yoffset);
 
       x++;
-    } 
+    }
 
     y++;
   }
 
-  // traverse tilemap to create entities
-  // for (auto y = 0; y < tilemap.size(); y++) {
-  //   for (auto x = 0; x < tilemap[y].size(); x++) {
-  //     Logger::Log("Tile: " + std::to_string(tilemap[y][x]) + " at " + std::to_string(x) + ", " + std::to_string(y));
-  //     
-  //   }
-  // }
+  // done with the map file
+  mapfile.close();
 
   // Create some entity
   Entity tank = registry->CreateEntity();
@@ -144,7 +145,7 @@ void Game::LoadLevel(int level) {
                                          glm::vec2(1.0, 1.0), 0.0);
   truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
   truck.AddComponent<SpriteComponent>("truck-image", 32, 32);
-  
+
 }
 
 void Game::Setup() {
